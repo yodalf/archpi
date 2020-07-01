@@ -6,7 +6,7 @@ if [[ 1 == $(_is-done minidev) ]]; then
     exit 0
 fi
 
-pacman -Syu --noconfirm sudo vim gcc cmake make dosfstools parted wget btrfs-progs multipath-tools qemu-headless
+pacman -Syu --noconfirm sudo vim gcc cmake make dosfstools parted wget btrfs-progs multipath-tools qemu-headless rsync
 
 echo 'alarm ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
 
