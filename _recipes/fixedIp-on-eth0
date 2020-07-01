@@ -1,0 +1,7 @@
+#!/bin/bash
+
+CMD=$(basename $0)
+
+cp -a $PWD/_recipes/_$CMD/. /. &>/dev/null
+
+sed -i "s!^#Address=!Address=$1!" /etc/systemd/network/eth0.network

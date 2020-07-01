@@ -1,0 +1,38 @@
+#!/bin/bash
+
+
+IMG=$1
+
+ARCH='ArchLinuxARM-rpi-4-latest.tar.gz'
+
+SIZE='2G'
+
+
+
+if [[ -z $1 ]]; then
+    echo 'Need an image name!'
+    exit 1
+fi
+
+
+# Wich version of Arch Linux ARM to use & image name
+if [[ ! -e $IMG ]]; then
+    ./create-image $IMG $ARCH 2G
+fi
+
+# What recipes to apply. The order is important.
+
+./into-image $IMG 'core-start'
+
+./into-image $IMG 'dhcpClient-on-wlan0 Jumanji pwd'
+#./into-image $IMG 'dhcpClient-on-eth0'
+./into-image $IMG 'fixedIp-on-eth0 192.168.42.1/24'
+#./into-image $IMG 'dhcpServer-on-eth0'
+./into-image $IMG 'minidev'
+
+./into-image $IMG 'core-end'
+
+
+#myCustomRecipe 1 2 3
+
+

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+X=$(ls /_ExtraExec/* 2> /dev/null)
+
+if [[ -n $X ]]; then
+  for A in $X; do
+    . $A
+  done
+fi
+

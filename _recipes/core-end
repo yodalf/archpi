@@ -1,0 +1,13 @@
+#!/bin/bash
+
+CMD=$(basename $0)
+
+# Keep original so we can invoque the command multiple times without side-effects
+if [[ ! -e /etc/rc.local.ARCH ]]; then
+    cp /etc/rc.local /etc/rc.local.ARCH
+else
+    cp /etc/rc.local.ARCH /etc/rc.local
+fi
+
+cat $PWD/_recipes/_$CMD/rc.local >> /etc/rc.local
+

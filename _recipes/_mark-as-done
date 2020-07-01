@@ -1,0 +1,5 @@
+#!/bin/bash
+
+mkdir -p /var/archpi
+touch /var/archpi/$1
+

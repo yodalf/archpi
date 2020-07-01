@@ -1,0 +1,12 @@
+#!/bin/bash -e
+#
+# Setup mini dev environment
+#
+if [[ 1 == $(_is-done minidev) ]]; then
+    exit 0
+fi
+
+pacman -Syu --noconfirm vim gcc cmake make dosfstools parted wget btrfs-progs multipath-tools qemu-headless
+
+_mark-as-done minidev
+

@@ -1,0 +1,19 @@
+#!/bin/bash
+
+CMD=$(basename $0)
+
+if [[ 1 == $(_is-done $CMD) ]]; then
+    exit 0
+fi
+
+cp -a $PWD/_recipes/_$CMD/. /. &>/dev/null
+
+sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+locale-gen
+
+pacman-key --init
+pacman-key --populate archlinuxarm
+
+_mark-as-done core-start
+
+

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+#echo 0 > /sys/class/leds/led0/brightness
+#echo 0 > /sys/class/leds/led1/brightness
+
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+if [[ -n $(dmesg | grep sda1) ]]; then
+  mkdir -p /mnt/work
+  mount /dev/sda1 /mnt/work
+fi
+

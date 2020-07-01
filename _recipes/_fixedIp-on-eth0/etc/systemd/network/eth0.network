@@ -1,0 +1,15 @@
+[Match]
+Name=eth0
+
+[Network]
+#Address=
+IPForward=yes
+DHCP=no
+DHCPServer=no
+MulticastDNS=yes
+#DNS=
+#Gateway=
+
+[DHCPServer]
+DNS=8.8.8.8 1.1.1.1
+

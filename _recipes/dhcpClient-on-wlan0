@@ -1,0 +1,18 @@
+#!/bin/bash
+
+CMD=$(basename $0)
+
+cp -a $PWD/_recipes/_wlan/. /. &>/dev/null
+
+cat << EOF >> /etc/wpa_supplicant/wpa_supplicant-wlan0.conf
+
+network = {
+    ssid="$1"
+    psk="$2"
+    proto=RSN
+    key_mgmt=WPA-PSK
+    id_str="C1"
+    priority=1
+}
+EOF
+

@@ -1,0 +1,29 @@
+iptables -F
+iptables -t nat -F
+iptables -X
+
+iptables -t nat -A POSTROUTING -o $WAN_DEV -j MASQUERADE
+iptables -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+iptables -A FORWARD -i $LAN_DEV -o $WAN_DEV -j ACCEPT
+
+
+exit 0
+
+
+IP=""
+
+while [[ $IP == "" ]] ; do
+        IP=$(ip add show $WAN_DEV | grep 'inet ' | awk '{print $2}')
+done
+
+
+# Print the IP address
+_IP=$(hostname -i) || true
+if [ "$_IP" ]; then
+  #printf "My IP address is %s\n" "$_IP"
+  echo "( "$_IP")" > /etc/issue 
+fi
+
+
+
+

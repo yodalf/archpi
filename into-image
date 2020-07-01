@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 #{{{ Trap ctrl-c , clean-up and exit
 trap ctrl_c INT
 function cleanup_all() {
@@ -32,11 +31,16 @@ function ctrl_c() {
 
 #}}}
 
+if [[ -z $1 ]]; then
+    echo "into-image image_name [cmd to run from /mnt/work]"
+    exit 0
+fi
+
 TGT=$1
+CMD=$2
 
 DEV=$(basename $(sudo losetup --find --show $TGT))
 sudo kpartx -a /dev/$DEV
-ls /dev/mapper
 
 TMP=$(mktemp -d)
 sudo mount /dev/mapper/${DEV}p2 $TMP
@@ -44,9 +48,12 @@ sudo mkdir -p ${TMP}/boot
 sudo mount /dev/mapper/${DEV}p1 ${TMP}/boot
 
 
-#sudo systemd-nspawn --as-pid2 --bind /etc/resolv.conf  -D ${TMP}/ env http_proxy='http://172.17.0.1:3128' /bin/bash
-sudo systemd-nspawn --as-pid2 --bind /etc/resolv.conf  -D ${TMP}/  /bin/bash
-#sudo systemd-nspawn -b --bind /etc/resolv.conf  -D ${TMP}/
+if [[ -z $CMD ]]; then
+    sudo systemd-nspawn -q --as-pid2 --bind-ro $PWD:/archpi --bind-ro /etc/resolv.conf  -D ${TMP}/  /bin/bash 
+else
+    echo "$1: $2"
+    sudo systemd-nspawn -q --as-pid2 --bind-ro $PWD:/archpi --bind-ro /etc/resolv.conf  -D ${TMP}/  /bin/bash -c "cd /archpi; export PATH=\$PWD:\$PWD/_recipes:\$PATH ; $CMD"
+fi
 
 cleanup_all
 
