@@ -1,0 +1,62 @@
+#!/bin/bash 
+
+#{{{ Trap ctrl-c , clean-up and exit
+trap ctrl_c INT
+function cleanup_all() {
+
+#    sudo umount SD_root/dev
+#    sudo umount SD_root/proc
+#    sudo umount SD_root/sys
+
+    sudo umount ${1}1
+    sudo umount ${1}2
+
+    rmdir SD_root
+}
+
+function ctrl_c() {
+    set +e
+    echo
+    echo
+    echo "** User interrupt!  cleaning up."
+    echo
+    
+    cleanup_all $1
+
+    exit 1
+}
+
+#}}}
+
+if [[ -z $1 ]]; then
+    echo "chroot into an SD card device.  SD card must be pre-formatted with the correct partitions."
+    echo "If already mounted, it will be unmounted."
+    echo "SD card ROOT (and boot) is mounted on ./SD_root (and ./SD_root/boot) only for the time of the chroot"
+    echo "Example:   $0 /dev/sdc"
+    exit 0
+fi
+
+if [[ -e SD_root ]]; then
+    echo "SD_root exists! Please delete it."
+    exit 1
+fi
+
+if [[ -n "$(mount | grep ${1}1)" ]]; then
+    sudo umount ${1}1
+fi
+if [[ -n "$(mount | grep ${1}2)" ]]; then
+    sudo umount ${1}2
+fi
+
+mkdir SD_root
+sudo mount ${1}2 SD_root
+sudo mount ${1}1 SD_root/boot
+
+#sudo mount -t proc none SD_root/proc
+#sudo mount -t sysfs none SD_root/sys
+#sudo mount -o bind /dev SD_root/dev
+
+sudo systemd-nspawn --bind /etc/resolv.conf  -D SD_root /bin/bash
+
+cleanup_all $1
+

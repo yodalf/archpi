@@ -1,0 +1,53 @@
+#!/bin/bash
+
+
+#{{{ Trap ctrl-c , clean-up and exit
+trap ctrl_c INT
+function cleanup_all() {
+
+#    sudo umount SD_root/dev
+#    sudo umount SD_root/proc
+#    sudo umount SD_root/sys
+
+    sudo umount ${TMP}/boot
+    sudo umount ${TMP}
+    sudo kpartx -d /dev/$DEV
+    sudo losetup -d /dev/$DEV
+
+    rmdir $TMP
+
+}
+
+function ctrl_c() {
+    set +e
+    echo
+    echo
+    echo "** User interrupt!  cleaning up."
+    echo
+    
+    cleanup_all $1
+
+    exit 1
+}
+
+#}}}
+
+TGT=$1
+
+DEV=$(basename $(sudo losetup --find --show $TGT))
+sudo kpartx -a /dev/$DEV
+ls /dev/mapper
+
+TMP=$(mktemp -d)
+sudo mount /dev/mapper/${DEV}p2 $TMP
+sudo mkdir -p ${TMP}/boot 
+sudo mount /dev/mapper/${DEV}p1 ${TMP}/boot
+
+
+#sudo systemd-nspawn --as-pid2 --bind /etc/resolv.conf  -D ${TMP}/ env http_proxy='http://172.17.0.1:3128' /bin/bash
+sudo systemd-nspawn --as-pid2 --bind /etc/resolv.conf  -D ${TMP}/  /bin/bash
+#sudo systemd-nspawn -b --bind /etc/resolv.conf  -D ${TMP}/
+
+cleanup_all
+
+
