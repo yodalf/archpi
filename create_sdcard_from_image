@@ -1,0 +1,66 @@
+#!/bin/bash 
+
+#{{{ Trap ctrl-c , clean-up and exit
+trap ctrl_c INT
+function cleanup_all() {
+
+    sudo umount $TMP/boot
+    sudo umount ${TMP}
+
+    sudo umount $TMPI/boot
+    sudo umount ${TMPI}
+    sudo kpartx -d $IMG &> /dev/null
+
+    rmdir $TMP
+    rmdir $TMPI
+}
+
+function ctrl_c() {
+    set +e
+    echo
+    echo
+    echo "** User interrupt!  cleaning up."
+    echo
+    
+    cleanup_all $1
+
+    exit 1
+}
+
+#}}}
+
+# apt-get install -y qemu qemu-user-static binfmt-support
+
+DEV=$1
+IMG=$2
+
+sudo umount ${DEV}1
+sudo umount ${DEV}2
+
+sudo parted --script $DEV mklabel msdos
+sudo parted --script $DEV mkpart primary fat32 0% 200M
+sudo parted --script $DEV mkpart primary ext4 200M 100%
+
+
+sudo mkfs.vfat -F32 ${DEV}1
+#sudo mkfs.ext4 -F ${DEV}2
+sudo mkfs.btrfs -f  ${DEV}2
+
+TMP=$(mktemp -d)
+sudo mount ${DEV}2 $TMP
+sudo mkdir ${TMP}/boot
+sudo mount ${DEV}1 ${TMP}/boot
+
+
+DEVI='/dev/mapper/'$(sudo kpartx -l $IMG  | awk '{print $5}' | head -1 | awk -F/ '{print $3}')
+sudo kpartx -a $IMG
+
+TMPI=$(mktemp -d)
+sudo mount ${DEVI}p2 $TMPI
+sudo mkdir -p ${TMPI}/boot 
+sudo mount ${DEVI}p1 ${TMPI}/boot
+
+sudo rsync -a --info=progress2 $TMPI/ $TMP/
+
+cleanup_all
+
