@@ -6,7 +6,7 @@ cp -a $PWD/_recipes/_wlan/. /. &>/dev/null
 
 cat << EOF >> /etc/wpa_supplicant/wpa_supplicant-wlan0.conf
 
-network = {
+network={
     ssid="$1"
     psk="$2"
     proto=RSN

@@ -1,18 +1,21 @@
-#!/bin/bash
-
-CMD=$(basename $0)
-
-if [[ 1 == $(_is-done $CMD) ]]; then
+#!/bin/bash -e
+if [[ 1 == $(_is-done core-start) ]]; then
     exit 0
 fi
 
-cp -a $PWD/_recipes/_$CMD/. /. &>/dev/null
+set +e
+cp -a $PWD/_recipes/_core-start/. /. &>/dev/null
+set -e
 
 sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
 locale-gen
 
 pacman-key --init
 pacman-key --populate archlinuxarm
+
+echo $1 > /etc/hostname
+
+pacman -Syu --noconfirm
 
 _mark-as-done core-start
 

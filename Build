@@ -5,7 +5,7 @@ IMG=$1
 
 ARCH='ArchLinuxARM-rpi-4-latest.tar.gz'
 
-SIZE='2G'
+SIZE='3G'
 
 
 
@@ -22,7 +22,7 @@ fi
 
 # What recipes to apply. The order is important.
 
-./into-image $IMG 'core-start'
+./into-image $IMG 'core-start raspo'
 
 ./into-image $IMG 'dhcpClient-on-wlan0 Jumanji pwd'
 #./into-image $IMG 'dhcpClient-on-eth0'

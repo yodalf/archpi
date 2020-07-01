@@ -1,11 +1,13 @@
-iptables -F
-iptables -t nat -F
-iptables -X
+#iptables -F
+#iptables -t nat -F
+#iptables -X
 
-iptables -t nat -A POSTROUTING -o $WAN_DEV -j MASQUERADE
-iptables -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
-iptables -A FORWARD -i $LAN_DEV -o $WAN_DEV -j ACCEPT
+#iptables -t nat -A POSTROUTING -o $WAN_DEV -j MASQUERADE
+#iptables -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+#iptables -A FORWARD -i $LAN_DEV -o $WAN_DEV -j ACCEPT
 
+sleep 10
+ip a
 
 exit 0
 
