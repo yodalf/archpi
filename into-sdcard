@@ -52,11 +52,7 @@ mkdir SD_root
 sudo mount ${1}2 SD_root
 sudo mount ${1}1 SD_root/boot
 
-#sudo mount -t proc none SD_root/proc
-#sudo mount -t sysfs none SD_root/sys
-#sudo mount -o bind /dev SD_root/dev
-
-sudo systemd-nspawn --bind /etc/resolv.conf  -D SD_root /bin/bash
+sudo systemd-nspawn -q --as-pid2 --bind /etc/resolv.conf  -D SD_root /bin/bash
 
 cleanup_all $1
 
