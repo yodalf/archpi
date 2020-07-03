@@ -3,7 +3,7 @@
 
 IMG=$1
 
-ARCH='ArchLinuxARM-rpi-4-latest.tar.gz'
+ARCH='ArchLinuxARM-rpi-3-latest.tar.gz'
 
 SIZE='3G'
 
@@ -17,7 +17,7 @@ fi
 
 # Wich version of Arch Linux ARM to use & image name
 if [[ ! -e $IMG ]]; then
-    ./create-image $IMG $ARCH 2G
+    ./create-image $IMG $ARCH $SIZE
 fi
 
 # What recipes to apply. The order is important.
