@@ -3,7 +3,7 @@
 
 IMG=$1
 
-ARCH='ArchLinuxARM-rpi-3-latest.tar.gz'
+ARCH='ArchLinuxARM-rpi-4-latest.tar.gz'
 
 SIZE='3G'
 

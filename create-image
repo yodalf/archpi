@@ -61,7 +61,7 @@ sudo parted --script $DEV mkpart primary ext4 200M 100%
 
 
 sudo mkfs.vfat -F32 ${DEV}p1
-sudo mkfs.ext4 -F ${DEV}p2
+sudo mkfs.btrfs -f ${DEV}p2
 
 TMP=$(mktemp -d)
 sudo mount ${DEV}p2 $TMP
