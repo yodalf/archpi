@@ -49,10 +49,10 @@ sudo mount /dev/mapper/${DEV}p1 ${TMP}/boot
 
 
 if [[ -z $CMD ]]; then
-    sudo systemd-nspawn -q --as-pid2 --bind-ro $PWD:/archpi --bind-ro /etc/resolv.conf  -D ${TMP}/  /bin/bash 
+    sudo systemd-nspawn -q --as-pid2 --bind $PWD:/archpi --bind-ro /etc/resolv.conf  -D ${TMP}/  /bin/bash 
 else
     echo "$1: $2"
-    sudo systemd-nspawn -q --as-pid2 --bind-ro $PWD:/archpi --bind-ro /etc/resolv.conf  -D ${TMP}/  /bin/bash -c "cd /archpi; export PATH=\$PWD:\$PWD/_recipes:\$PATH ; $CMD"
+    sudo systemd-nspawn -q --as-pid2 --bind $PWD:/archpi --bind-ro /etc/resolv.conf  -D ${TMP}/  /bin/bash -c "cd /archpi; export PATH=\$PWD:\$PWD/_recipes:\$PATH ; $CMD"
 fi
 
 cleanup_all
